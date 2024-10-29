@@ -1,0 +1,237 @@
+Index: src/main/java/org/example/week_09_regexassignment/HelloController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.example.week_09_regexassignment;\r\n\r\nimport javafx.fxml.FXML;\r\nimport javafx.scene.control.Button;\r\nimport javafx.scene.control.TextField;\r\nimport javafx.scene.control.Alert;\r\nimport javafx.scene.control.Alert.AlertType;\r\n\r\npublic class HelloController {\r\n\r\n    @FXML\r\n    private TextField dob;\r\n\r\n    @FXML\r\n    private TextField email;\r\n\r\n    @FXML\r\n    private TextField fname;\r\n\r\n    @FXML\r\n    private TextField lname;\r\n\r\n    @FXML\r\n    private TextField zipcode;\r\n\r\n    @FXML\r\n    private Button addButton;\r\n\r\n    // Regex patterns\r\n    private static final String NAME_REGEX = \"^[A-Za-z]{2,25}$\";\r\n    private static final String DOB_REGEX = \"^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/((19|20)\\\\d\\\\d)$\";\r\n    private static final String EMAIL_REGEX = \"^[A-Za-z0-9._%+-]+@gmail\\\\.com$\";\r\n    private static final String ZIP_CODE_REGEX = \"^\\\\d{5}$\";\r\n\r\n    @FXML\r\n    public void initialize() {\r\n        setupValidationListeners();\r\n        updateAddButtonState();\r\n    }\r\n\r\n    private void setupValidationListeners() {\r\n        // Add text listeners to validate fields in real-time\r\n        fname.textProperty().addListener((obs, oldVal, newVal) -> validateField(fname, NAME_REGEX));\r\n        lname.textProperty().addListener((obs, oldVal, newVal) -> validateField(lname, NAME_REGEX));\r\n        email.textProperty().addListener((obs, oldVal, newVal) -> validateField(email, EMAIL_REGEX));\r\n        dob.textProperty().addListener((obs, oldVal, newVal) -> validateField(dob, DOB_REGEX));\r\n        zipcode.textProperty().addListener((obs, oldVal, newVal) -> validateField(zipcode, ZIP_CODE_REGEX));\r\n    }\r\n\r\n    private void validateField(TextField field, String regex) {\r\n        // Validates the field content\r\n        if (!field.getText().matches(regex)) {\r\n            updateAddButtonState();\r\n        }\r\n    }\r\n\r\n    private void updateAddButtonState() {\r\n        // Enables the \"Add\" button only if all fields are valid\r\n        boolean allValid = fname.getText().matches(NAME_REGEX) &&\r\n                lname.getText().matches(NAME_REGEX) &&\r\n                email.getText().matches(EMAIL_REGEX) &&\r\n                dob.getText().matches(DOB_REGEX) &&\r\n                zipcode.getText().matches(ZIP_CODE_REGEX);\r\n        addButton.setDisable(!allValid);\r\n    }\r\n\r\n    @FXML\r\n    public void handleAddButton() {\r\n        if (!addButton.isDisable()) {\r\n            showAlert(\"Success\", \"Registration completed successfully!\");\r\n            navigateToNewUI();\r\n        }\r\n    }\r\n\r\n    private void showAlert(String title, String message) {\r\n        Alert alert = new Alert(AlertType.INFORMATION);\r\n        alert.setTitle(title);\r\n        alert.setHeaderText(null);\r\n        alert.setContentText(message);\r\n        alert.showAndWait();\r\n    }\r\n\r\n    /**\r\n     * Navigates to the new user interface after successful registration.\r\n     * This method should contain the logic to switch to another screen or display\r\n     * the next stage in the user registration process.\r\n     *\r\n     * @throws Exception if navigation fails due to loading issues or missing resources.\r\n     */\r\n    private void navigateToNewUI() {\r\n        // Implement navigation logic to the new screen\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/example/week_09_regexassignment/HelloController.java b/src/main/java/org/example/week_09_regexassignment/HelloController.java
+--- a/src/main/java/org/example/week_09_regexassignment/HelloController.java	(revision 427d74b2dca4e3ea7a6c86eba164be0969a351c0)
++++ b/src/main/java/org/example/week_09_regexassignment/HelloController.java	(date 1730170255411)
+@@ -5,6 +5,12 @@
+ import javafx.scene.control.TextField;
+ import javafx.scene.control.Alert;
+ import javafx.scene.control.Alert.AlertType;
++import javafx.beans.value.ChangeListener;
++import javafx.beans.value.ObservableValue;
++
++import java.time.LocalDate;
++import java.time.format.DateTimeFormatter;
++import java.time.format.DateTimeParseException;
+ 
+ public class HelloController {
+ 
+@@ -26,10 +32,10 @@
+     @FXML
+     private Button addButton;
+ 
+-    // Regex patterns
++    // Updated Regex patterns
+     private static final String NAME_REGEX = "^[A-Za-z]{2,25}$";
+     private static final String DOB_REGEX = "^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/((19|20)\\d\\d)$";
+-    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@gmail\\.com$";
++    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@farmingdale\\.edu$";
+     private static final String ZIP_CODE_REGEX = "^\\d{5}$";
+ 
+     @FXML
+@@ -39,19 +45,37 @@
+     }
+ 
+     private void setupValidationListeners() {
+-        // Add text listeners to validate fields in real-time
++        // Add real-time text listeners to validate each field
+         fname.textProperty().addListener((obs, oldVal, newVal) -> validateField(fname, NAME_REGEX));
+         lname.textProperty().addListener((obs, oldVal, newVal) -> validateField(lname, NAME_REGEX));
+         email.textProperty().addListener((obs, oldVal, newVal) -> validateField(email, EMAIL_REGEX));
+-        dob.textProperty().addListener((obs, oldVal, newVal) -> validateField(dob, DOB_REGEX));
++        dob.textProperty().addListener((obs, oldVal, newVal) -> validateDateField(dob));
+         zipcode.textProperty().addListener((obs, oldVal, newVal) -> validateField(zipcode, ZIP_CODE_REGEX));
+     }
+ 
+     private void validateField(TextField field, String regex) {
+-        // Validates the field content
+-        if (!field.getText().matches(regex)) {
+-            updateAddButtonState();
+-        }
++        // Applies regex validation and updates the button state
++        if (field.getText().matches(regex)) {
++            field.setStyle(""); // Clear error style
++        } else {
++            field.setStyle("-fx-border-color: red;"); // Mark invalid fields in red
++        }
++        updateAddButtonState();
++    }
++
++    private void validateDateField(TextField field) {
++        String dobText = field.getText();
++        try {
++            LocalDate dobDate = LocalDate.parse(dobText, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
++            if (dobDate.isBefore(LocalDate.now())) {
++                field.setStyle(""); // Valid date style
++            } else {
++                field.setStyle("-fx-border-color: red;");
++            }
++        } catch (DateTimeParseException e) {
++            field.setStyle("-fx-border-color: red;");
++        }
++        updateAddButtonState();
+     }
+ 
+     private void updateAddButtonState() {
+@@ -59,11 +83,21 @@
+         boolean allValid = fname.getText().matches(NAME_REGEX) &&
+                 lname.getText().matches(NAME_REGEX) &&
+                 email.getText().matches(EMAIL_REGEX) &&
+-                dob.getText().matches(DOB_REGEX) &&
++                dob.getText().matches(DOB_REGEX) && isDateValid(dob.getText()) &&
+                 zipcode.getText().matches(ZIP_CODE_REGEX);
+         addButton.setDisable(!allValid);
+     }
+ 
++    private boolean isDateValid(String dobText) {
++        // Validates the Date of Birth field to ensure it is a living person's date
++        try {
++            LocalDate dobDate = LocalDate.parse(dobText, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
++            return dobDate.isBefore(LocalDate.now());
++        } catch (DateTimeParseException e) {
++            return false;
++        }
++    }
++
+     @FXML
+     public void handleAddButton() {
+         if (!addButton.isDisable()) {
+@@ -89,5 +123,11 @@
+      */
+     private void navigateToNewUI() {
+         // Implement navigation logic to the new screen
++        Alert alert = new Alert(AlertType.INFORMATION);
++        alert.setTitle("Navigation");
++        alert.setHeaderText(null);
++        alert.setContentText("Navigating to the next screen...");
++        alert.showAndWait();
++        // Replace with actual navigation code if needed
+     }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"e16602f2-97c1-48cf-b90d-70cd0adc9484\" name=\"Changes\" comment=\"in_it\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/org/example/week_09_regexassignment/HelloController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/org/example/week_09_regexassignment/HelloController.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\r\n  \"lastFilter\": {\r\n    \"state\": \"OPEN\",\r\n    \"assignee\": \"JADASIMONESIMON\"\r\n  }\r\n}]]></component>\r\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\r\n  \"selectedUrlAndAccountId\": {\r\n    \"url\": \"https://github.com/JADASIMONESIMON/week9regex.git\",\r\n    \"accountId\": \"a1d14590-d4fd-4fde-a2fa-51de6ff3ff20\"\r\n  }\r\n}]]></component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"generalSettings\">\r\n      <MavenGeneralSettings>\r\n        <option name=\"mavenHomeTypeForPersistence\" value=\"WRAPPER\" />\r\n      </MavenGeneralSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectCodeStyleSettingsMigration\">\r\n    <option name=\"version\" value=\"2\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\"><![CDATA[{\r\n  \"associatedIndex\": 0\r\n}]]></component>\r\n  <component name=\"ProjectId\" id=\"2o4pUC5WK5MaEwqgRziSOWoI84I\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.HelloApplication.executor\": \"Run\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"git-widget-placeholder\": \"master\",\r\n    \"kotlin-language-version-configured\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"HelloApplication\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"org.example.week_09_regexassignment.HelloApplication\" />\r\n      <module name=\"week_09_regexassignment\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"org.example.week_09_regexassignment.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.HelloApplication\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"e16602f2-97c1-48cf-b90d-70cd0adc9484\" name=\"Changes\" comment=\"\" />\r\n      <created>1730138718061</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1730138718061</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"in_it\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730162234394</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730162234394</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"in_it\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"in_it\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 427d74b2dca4e3ea7a6c86eba164be0969a351c0)
++++ b/.idea/workspace.xml	(date 1730169322658)
+@@ -6,7 +6,6 @@
+   <component name="ChangeListManager">
+     <list default="true" id="e16602f2-97c1-48cf-b90d-70cd0adc9484" name="Changes" comment="in_it">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/week_09_regexassignment/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/week_09_regexassignment/HelloController.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -14,20 +13,21 @@
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
+   <component name="Git.Settings">
++    <option name="PUSH_AUTO_UPDATE" value="true" />
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+-  "lastFilter": {
+-    "state": "OPEN",
+-    "assignee": "JADASIMONESIMON"
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;JADASIMONESIMON&quot;
+   }
+-}]]></component>
+-  <component name="GithubPullRequestsUISettings"><![CDATA[{
+-  "selectedUrlAndAccountId": {
+-    "url": "https://github.com/JADASIMONESIMON/week9regex.git",
+-    "accountId": "a1d14590-d4fd-4fde-a2fa-51de6ff3ff20"
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/JADASIMONESIMON/week9regex.git&quot;,
++    &quot;accountId&quot;: &quot;a1d14590-d4fd-4fde-a2fa-51de6ff3ff20&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="MavenImportPreferences">
+     <option name="generalSettings">
+       <MavenGeneralSettings>
+@@ -38,23 +38,23 @@
+   <component name="ProjectCodeStyleSettingsMigration">
+     <option name="version" value="2" />
+   </component>
+-  <component name="ProjectColorInfo"><![CDATA[{
+-  "associatedIndex": 0
+-}]]></component>
++  <component name="ProjectColorInfo">{
++  &quot;associatedIndex&quot;: 0
++}</component>
+   <component name="ProjectId" id="2o4pUC5WK5MaEwqgRziSOWoI84I" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+   <component name="ProjectViewState">
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Application.HelloApplication.executor": "Run",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "git-widget-placeholder": "master",
+-    "kotlin-language-version-configured": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RunManager">
+     <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="org.example.week_09_regexassignment.HelloApplication" />
+@@ -92,8 +92,35 @@
+       <option name="project" value="LOCAL" />
+       <updated>1730162234394</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="in_it">
++      <option name="closed" value="true" />
++      <created>1730164094796</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1730164094796</updated>
++    </task>
++    <task id="LOCAL-00003" summary="in_it">
++      <option name="closed" value="true" />
++      <created>1730168757846</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1730168757846</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="in_it" />
